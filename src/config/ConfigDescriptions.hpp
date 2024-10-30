@@ -584,6 +584,19 @@ inline static const std::vector<SConfigOptionDescription> CONFIG_OPTIONS = {
         .data        = SConfigOptionDescription::SRangeData{0, 0, 6}, // ##TODO RANGE?
     },
     SConfigOptionDescription{
+        .value       = "input:touchdevice:translate",
+        .description = "Translate the X,Y input from touchdevices. The translation is normalized to the device coordinate range, ex: 1, -1 moves all coordinates by 1 device-width" 
+                       "to the right and 1 device-height up.",
+        .type        = CONFIG_OPTION_VECTOR,
+        .data        = SConfigOptionDescription::SVectorData{{0.0, 0.0}, {}, {}},
+    },
+    SConfigOptionDescription{
+        .value       = "input:touchdevice:scale",
+        .description = "Scale the W,H of the touchdevice's coordinate range",
+        .type        = CONFIG_OPTION_VECTOR,
+        .data        = SConfigOptionDescription::SVectorData{{0.0, 0.0}, {}, {}},
+    },
+    SConfigOptionDescription{
         .value       = "input:touchdevice:output",
         .description = "The monitor to bind touch devices. The default is auto-detection. To stop auto-detection, use an empty string or the [[Empty]] value.",
         .type        = CONFIG_OPTION_STRING_SHORT,
@@ -605,6 +618,19 @@ inline static const std::vector<SConfigOptionDescription> CONFIG_OPTIONS = {
         .description = "transform the input from tablets. The possible transformations are the same as those of the monitors",
         .type        = CONFIG_OPTION_INT,
         .data        = SConfigOptionDescription::SRangeData{0, 0, 6}, // ##TODO RANGE?
+    },
+    SConfigOptionDescription{
+        .value       = "input:tablet:translate",
+        .description = "Translate the X,Y input from tablets. The translation is normalized to the device coordinate range, ex: 1, -1 moves all coordinates by 1 device-width" 
+                       "to the right and 1 device-height up.",
+        .type        = CONFIG_OPTION_VECTOR,
+        .data        = SConfigOptionDescription::SVectorData{{0.0, 0.0}, {}, {}},
+    },
+    SConfigOptionDescription{
+        .value       = "input:tablet:scale",
+        .description = "Scale the W,H of the tablet's coordinate range",
+        .type        = CONFIG_OPTION_VECTOR,
+        .data        = SConfigOptionDescription::SVectorData{{0.0, 0.0}, {}, {}},
     },
     SConfigOptionDescription{
         .value       = "input:tablet:output",

@@ -508,9 +508,13 @@ CConfigManager::CConfigManager() {
     m_pConfig->addConfigValue("input:touchpad:drag_lock", Hyprlang::INT{0});
     m_pConfig->addConfigValue("input:touchpad:scroll_factor", {1.f});
     m_pConfig->addConfigValue("input:touchdevice:transform", Hyprlang::INT{0});
+    m_pConfig->addConfigValue("input:touchdevice:translate", Hyprlang::VEC2{0, 0});
+    m_pConfig->addConfigValue("input:touchdevice:scale", Hyprlang::VEC2{1, 1});
     m_pConfig->addConfigValue("input:touchdevice:output", {"[[Auto]]"});
     m_pConfig->addConfigValue("input:touchdevice:enabled", Hyprlang::INT{1});
     m_pConfig->addConfigValue("input:tablet:transform", Hyprlang::INT{0});
+    m_pConfig->addConfigValue("input:tablet:translate", Hyprlang::VEC2{0, 0});
+    m_pConfig->addConfigValue("input:tablet:scale", Hyprlang::VEC2{1, 1});
     m_pConfig->addConfigValue("input:tablet:output", {STRVAL_EMPTY});
     m_pConfig->addConfigValue("input:tablet:region_position", Hyprlang::VEC2{0, 0});
     m_pConfig->addConfigValue("input:tablet:region_size", Hyprlang::VEC2{0, 0});
@@ -617,8 +621,10 @@ CConfigManager::CConfigManager() {
     m_pConfig->addSpecialConfigValue("device", "scroll_button", Hyprlang::INT{0});
     m_pConfig->addSpecialConfigValue("device", "scroll_button_lock", Hyprlang::INT{0});
     m_pConfig->addSpecialConfigValue("device", "scroll_points", {STRVAL_EMPTY});
-    m_pConfig->addSpecialConfigValue("device", "transform", Hyprlang::INT{0});
     m_pConfig->addSpecialConfigValue("device", "output", {STRVAL_EMPTY});
+    m_pConfig->addSpecialConfigValue("device", "transform", Hyprlang::INT{0});
+    m_pConfig->addSpecialConfigValue("device", "translate", Hyprlang::VEC2{0, 0});            // only for tablets and touchdevices 
+    m_pConfig->addSpecialConfigValue("device", "scale", Hyprlang::VEC2{1, 1});                // only for tablets and touchdevices 
     m_pConfig->addSpecialConfigValue("device", "enabled", Hyprlang::INT{1});                  // only for mice, touchpads, and touchdevices
     m_pConfig->addSpecialConfigValue("device", "region_position", Hyprlang::VEC2{0, 0});      // only for tablets
     m_pConfig->addSpecialConfigValue("device", "region_size", Hyprlang::VEC2{0, 0});          // only for tablets

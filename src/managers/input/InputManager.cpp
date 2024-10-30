@@ -1512,10 +1512,31 @@ void CInputManager::setTouchDeviceConfigs(SP<ITouch> dev) {
             if (libinput_device_config_send_events_get_mode(LIBINPUTDEV) != mode)
                 libinput_device_config_send_events_set_mode(LIBINPUTDEV, mode);
 
+            // Get preset rotation matrix 
             const int ROTATION = std::clamp(g_pConfigManager->getDeviceInt(PTOUCHDEV->hlName, "transform", "input:touchdevice:transform"), 0, 7);
+            const float* rotMatrix = MATRICES[ROTATION];
+
+            // Build a scale & translate matrix
+            const auto TRANSLATE = g_pConfigManager->getDeviceVec(PTOUCHDEV->hlName, "translate", "input:touchdevice:translate");
+            const auto SCALE = g_pConfigManager->getDeviceVec(PTOUCHDEV->hlName, "scale", "input:touchdevice:scale");
+            const float stMatrix[6] = {
+               SCALE.x, 0.0f,     TRANSLATE.x,
+               0.0f,    SCALE.y,  TRANSLATE.y
+            };
+
+            // Build calibration matrix by combining the two matricies
+            const float calibrationMatrix[6] = {
+                rotMatrix[0] * stMatrix[0] + rotMatrix[1] * stMatrix[3],
+                rotMatrix[0] * stMatrix[1] + rotMatrix[1] * stMatrix[4],
+                rotMatrix[0] * stMatrix[2] + rotMatrix[1] * stMatrix[5] + rotMatrix[2],
+                rotMatrix[3] * stMatrix[0] + rotMatrix[4] * stMatrix[3],
+                rotMatrix[3] * stMatrix[1] + rotMatrix[4] * stMatrix[4],
+                rotMatrix[3] * stMatrix[2] + rotMatrix[4] * stMatrix[5] + rotMatrix[5],
+            };
+
             Debug::log(LOG, "Setting calibration matrix for device {}", PTOUCHDEV->hlName);
             if (libinput_device_config_calibration_has_matrix(LIBINPUTDEV))
-                libinput_device_config_calibration_set_matrix(LIBINPUTDEV, MATRICES[ROTATION]);
+                libinput_device_config_calibration_set_matrix(LIBINPUTDEV, calibrationMatrix);
 
             auto       output     = g_pConfigManager->getDeviceString(PTOUCHDEV->hlName, "output", "input:touchdevice:output");
             bool       bound      = !output.empty() && output != STRVAL_EMPTY;
@@ -1557,9 +1578,31 @@ void CInputManager::setTabletConfigs() {
             const auto RELINPUT = g_pConfigManager->getDeviceInt(NAME, "relative_input", "input:tablet:relative_input");
             t->relativeInput    = RELINPUT;
 
+            // Get preset rotation matrix 
             const int ROTATION = std::clamp(g_pConfigManager->getDeviceInt(NAME, "transform", "input:tablet:transform"), 0, 7);
+            const float* rotMatrix = MATRICES[ROTATION];
+
+            // Build a scale & translate matrix
+            const auto TRANSLATE = g_pConfigManager->getDeviceVec(NAME, "translate", "input:tablet:translate");
+            const auto SCALE = g_pConfigManager->getDeviceVec(NAME, "scale", "input:tablet:scale");
+            const float stMatrix[6] = {
+               SCALE.x, 0.0f,     TRANSLATE.x,
+               0.0f,    SCALE.y,  TRANSLATE.y
+            };
+
+            // Build calibration matrix by combining the two matricies
+            const float calibrationMatrix[6] = {
+                rotMatrix[0] * stMatrix[0] + rotMatrix[1] * stMatrix[3],
+                rotMatrix[0] * stMatrix[1] + rotMatrix[1] * stMatrix[4],
+                rotMatrix[0] * stMatrix[2] + rotMatrix[1] * stMatrix[5] + rotMatrix[2],
+                rotMatrix[3] * stMatrix[0] + rotMatrix[4] * stMatrix[3],
+                rotMatrix[3] * stMatrix[1] + rotMatrix[4] * stMatrix[4],
+                rotMatrix[3] * stMatrix[2] + rotMatrix[4] * stMatrix[5] + rotMatrix[5],
+            };
+
+
             Debug::log(LOG, "Setting calibration matrix for device {}", NAME);
-            libinput_device_config_calibration_set_matrix(LIBINPUTDEV, MATRICES[ROTATION]);
+            libinput_device_config_calibration_set_matrix(LIBINPUTDEV, calibrationMatrix); 
 
             if (g_pConfigManager->getDeviceInt(NAME, "left_handed", "input:tablet:left_handed") == 0)
                 libinput_device_config_left_handed_set(LIBINPUTDEV, 0);
